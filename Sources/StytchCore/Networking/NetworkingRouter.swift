@@ -171,9 +171,11 @@ public extension NetworkingRouter {
             }
             return dataContainer.data
         } catch let error as StytchAPIError where error.statusCode == 401 {
+            print(error.errorInfo)
             sessionManager.resetSession()
             throw error
         } catch {
+            print(error.errorInfo)
             throw error
         }
     }

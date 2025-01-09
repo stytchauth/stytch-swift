@@ -34,6 +34,7 @@ internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
         let oldBody = newRequest.httpBody ?? Data("{}".utf8)
         var newBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
         let telemetryId = await dfp.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain) as AnyObject
+        print("handleDFPObservationMode - telemetryId: \(telemetryId)")
         newBody["dfp_telemetry_id"] = telemetryId
         if captcha.isConfigured() {
             newBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
@@ -49,15 +50,18 @@ internal struct NetworkRequestHandlerImplementation: NetworkRequestHandler {
         let oldBody = firstRequest.httpBody ?? Data("{}".utf8)
         var firstRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
         let telemetryId1 = await dfp.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain) as AnyObject
+        print("handleDFPDecisioningMode - telemetryId1: \(telemetryId1)")
         firstRequestBody["dfp_telemetry_id"] = telemetryId1
         firstRequest.httpBody = try JSONSerialization.data(withJSONObject: firstRequestBody)
         let (data, response) = try await requestHandler(session, firstRequest)
+        print("handleDFPDecisioningMode - response.statusCode: \(response.statusCode)")
         if response.statusCode != 403 {
             return (data, response)
         }
         var secondRequest = request
         var secondRequestBody = try JSONSerialization.jsonObject(with: oldBody) as? [String: AnyObject] ?? [:]
         let telemetryId2 = await dfp.getTelemetryId(publicToken: publicToken, dfppaDomain: dfppaDomain) as AnyObject
+        print("handleDFPDecisioningMode - telemetryId2: \(telemetryId2)")
         secondRequestBody["dfp_telemetry_id"] = telemetryId2
         secondRequestBody["captcha_token"] = await captcha.executeRecaptcha() as AnyObject
         secondRequest.httpBody = try JSONSerialization.data(withJSONObject: secondRequestBody)

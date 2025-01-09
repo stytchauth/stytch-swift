@@ -5,6 +5,11 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         StytchClient.configure(publicToken: "public-token-test-728f8b82-2a20-4926-b077-a8ca7d67e1b2")
+
+        Task {
+            do { for index in 0..<100 { print("\(index) - \(try await StytchClient.dfp.getTelemetryID())") } }
+            catch { print(error.errorInfo) }
+        }
     }
 
     @IBAction func sendAndAuthenticateOTPTapped(_: Any) {
