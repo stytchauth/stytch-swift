@@ -30,11 +30,7 @@ extension StytchB2BUIClient {
         for product in validProducts {
             switch product {
             case .emailMagicLinks, .emailOtp:
-                if case .discovery = configuration.computedAuthFlowType {
-                    if productComponents.contains(.email) == false {
-                        productComponents.append(.email)
-                    }
-                } else if configuration.supportsEmailAndPasswords == true {
+                if configuration.supportsEmailAndPasswords == true {
                     if productComponents.contains(.emailAndPasswords) == false {
                         productComponents.append(.emailAndPasswords)
                     }
@@ -46,12 +42,10 @@ extension StytchB2BUIClient {
                     productComponents.append(.ssoButtons)
                 }
             case .passwords:
-                if case .organization = configuration.computedAuthFlowType {
-                    if configuration.supportsEmailAndPasswords == true, productComponents.contains(.emailAndPasswords) == false {
-                        productComponents.append(.emailAndPasswords)
-                    } else if configuration.supportsPasswordsWithoutEmail {
-                        productComponents.append(.password)
-                    }
+                if configuration.supportsEmailAndPasswords == true, productComponents.contains(.emailAndPasswords) == false {
+                    productComponents.append(.emailAndPasswords)
+                } else if configuration.supportsPasswordsWithoutEmail {
+                    productComponents.append(.password)
                 }
             case .oauth:
                 productComponents.append(.oAuthButtons)
