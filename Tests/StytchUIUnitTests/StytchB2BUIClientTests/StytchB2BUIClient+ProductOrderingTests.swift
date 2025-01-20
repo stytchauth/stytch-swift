@@ -38,19 +38,6 @@ final class ProductOrderingTests: B2BBaseTestCase {
         XCTAssertTrue(productComponents.count == 1, "\(productComponents)")
     }
 
-    func testHasProductsNotValidInDiscovery() {
-        let products: [StytchB2BUIClient.B2BProducts] = [.emailOtp, .emailMagicLinks, .passwords, .sso]
-        let configuration = configuration(
-            products: products,
-            authFlowType: .discovery
-        )
-
-        // Currently in Discovery there are no passwords
-        let productComponents = StytchB2BUIClient.productComponentsOrdering(validProducts: products, configuration: configuration, hasSSOActiveConnections: false)
-        XCTAssertTrue(productComponents.contains(.email))
-        XCTAssertTrue(productComponents.count == 1, "\(productComponents)")
-    }
-
     func testHasBothEmailProductsAndPasswordsInOrganization() {
         let products: [StytchB2BUIClient.B2BProducts] = [.emailOtp, .emailMagicLinks, .passwords]
         let configuration = configuration(

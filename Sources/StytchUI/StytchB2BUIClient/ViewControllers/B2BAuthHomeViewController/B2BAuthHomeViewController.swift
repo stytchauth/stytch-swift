@@ -190,6 +190,10 @@ extension B2BAuthHomeViewController: B2BPasswordsHomeViewControllerDelegate {
         startMFAFlowIfNeeded(configuration: viewModel.state.configuration)
     }
 
+    func didDiscoveryAuthenticateWithPassword() {
+        startDiscoveryFlowIfNeeded(configuration: viewModel.state.configuration)
+    }
+
     func didSendEmailMagicLink() {
         showEmailConfirmation(configuration: viewModel.state.configuration, type: .passwordResetVerify)
     }
